@@ -1,0 +1,23 @@
+Data description
+
+ident = un identifiant pour chaque séjour, id_D est le identifiant du séjour suivant
+
+Ghm2 = Groupage GENRSA, une sorte de classification pour les séjours hospitaliers, décisive pour leur remboursement
+
+DP = Diagnostic principal, le motif médical d’hospitalisation
+
+nbActe = Nombre de zones d’actes (acte = geste médicale : radio, écho, irm…) dans ce séjours
+
+nbRum = Nombre d’Unités Médicales (services à l’hôpital) contenus dans ce séjours
+
+nbda = Nombre de diagnostics associés dans ce séjour (les comorbilités)
+
+nbSeance = Nombre de séances ()
+
+modeEntree / modeSortie :
+
+6 = mutation depuis/vers un autre service
+7 = transfert depuis/vers un autre
+8 = domicile
+9 = décès
+duree = duree de séjour (en jour)
