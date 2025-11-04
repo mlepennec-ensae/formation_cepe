@@ -1,1 +1,8 @@
-df_selected_5 =df_selected_5[['id', 'release_year', 'acteur_5', 'awards_info_2_5']]
+df_selected_10_small_actors['big_awards_before_film_10'] = df_selected_10_small_actors.apply(
+    lambda row: count_big_awards_before_film_2(row['awards_info_2_10'], row['release_year']),
+    axis=1)
+df_selected_10_small_actors['awards_before_film_10'] = df_selected_10_small_actors.apply(
+    lambda row: count_awards_before_film_2(row['awards_info_2_10'], row['release_year']),
+    axis=1)
+df_selected_10_small_actors['small_awards_before_film_10'] = df_selected_10_small_actors['awards_before_film_10']-df_selected_10_small_actors['big_awards_before_film_10']
+df_selected_10_small_actors=df_selected_10_small_actors.drop(['awards_before_film_10'], axis=1)
