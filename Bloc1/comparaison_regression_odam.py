@@ -3,28 +3,28 @@
 # Importation des modules
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.linear_model import RidgeCV, ElasticNetCV, LassoCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import KFold
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
 
 # Chargement des données
-WT1_df = pd.read_csv("WT1_dfcomplet.csv", header=0, sep=";")
+ozone = pd.read_csv("ozonecomplet.csv",header=0, sep=";")
 
 # Nettoyage des données
-# WT1_df = WT1_df.drop(["nomligne", "Dv", "Ne"], axis=1)
-# WT1_df.rename(columns={"O3": "TARGET"}, inplace=True)
-
+ozone = ozone.drop(["nomligne", "Dv", "Ne"], axis=1)
+ozone.rename(columns={"O3": "Y"}, inplace=True)
 
 # Création d'un dataframe pour comparer les résultats de chaque méthode (n blocs)
 PREV = pd.DataFrame(
     {
         "bloc": np.nan,
-        "TARGET": WT1_df["TARGET"],
+        "Y": ozone["Y"],
     }
 )
 
@@ -34,12 +34,12 @@ PREV = pd.DataFrame(
 # Initialisation de KFold
 kf = KFold(n_splits=10, shuffle=True, random_state=0)
 
-for i, (train_index, test_index) in enumerate(kf.split(WT1_df)):
+for i, (train_index, test_index) in enumerate(kf.split(ozone)):
 
     # Séparation des données en train et test
-    X_train = WT1_df.iloc[train_index].drop(["TARGET"], axis=1)
-    X_test = WT1_df.iloc[test_index].drop(["TARGET"], axis=1)
-    Y_train = WT1_df.iloc[train_index]["TARGET"]
+    X_train = ozone.iloc[train_index].drop(["Y"], axis=1)
+    X_test = ozone.iloc[test_index].drop(["Y"], axis=1)
+    Y_train = ozone.iloc[train_index]["Y"]
 
     # Mise à jour de la colonne 'bloc' dans PREV
     PREV.loc[test_index, "bloc"] = i
@@ -78,8 +78,8 @@ for i, (train_index, test_index) in enumerate(kf.split(WT1_df)):
     # Forêt aléatoire
     foret = RandomForestRegressor(n_estimators=100)
     foret.fit(X_train, Y_train)
-    PREV.loc[test_index, "foret100"] = foret.predict(X_test)
-    foret = RandomForestRegressor(n_estimators=500, max_features=0.3)
+    PREV.loc[test_index, "foret100"] = foret.predict(X_test)  
+    foret = RandomForestRegressor(n_estimators=500,max_features=0.3)
     foret.fit(X_train, Y_train)
     PREV.loc[test_index, "foret500"] = foret.predict(X_test)
 
